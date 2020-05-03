@@ -1,7 +1,7 @@
 const baseUrl =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000/api"
-    : "http://localhost:5000/api";
+    : "https://gbenga-todolist.herokuapp.com/api";
 
 export const loginUrl = `${baseUrl}/auth/login`;
 export const registrationUrl = `${baseUrl}/auth/register`;
