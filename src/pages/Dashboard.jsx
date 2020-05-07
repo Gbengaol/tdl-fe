@@ -3,6 +3,7 @@ import {
   getAllTodosEndPoint,
   deleteATodoEndPoint,
   archiveATodoEndPoint,
+  editATodoEndPoint,
 } from "../utils/apis";
 import { errorHandler } from "../utils/errorHandler";
 import AddTodoModal from "../components/Modals/AddTodoModal.component";
@@ -14,11 +15,13 @@ import "react-pagination-js/dist/styles.css";
 import EditIcon from "../img/edit.svg";
 import TrashIcon from "../img/trash.svg";
 import ArchiveIcon from "../img/archive.svg";
+import CompleteIcon from "../img/complete.svg";
 import TextInput from "../components/TextInput.component";
 
 const Dashboard = () => {
   const [todos, setTodos] = useState([]);
   const [count, setCount] = useState();
+  const [viewCompleted, setViewCompleted] = useState(false);
   const [size] = useState(10);
   const [page, setPage] = useState(1);
   const [refreshTodos, setRefreshTodos] = useState();
@@ -27,16 +30,20 @@ const Dashboard = () => {
   useEffect(() => {
     getAllTodos();
     // eslint-disable-next-line
-  }, [refreshTodos, page]);
+  }, [refreshTodos, page, viewCompleted]);
   const getAllTodos = async (search) => {
     try {
-      const result = await getAllTodosEndPoint(size, page, search);
+      const result = await getAllTodosEndPoint(
+        size,
+        page,
+        search,
+        viewCompleted
+      );
       if (result.status === 200) {
         setTodos(result.data.todos);
         setCount(result.data.count);
       }
     } catch (error) {
-      console.log(error.response);
       if (error.response.status === 401) {
         history.push("/");
       }
@@ -94,15 +101,44 @@ const Dashboard = () => {
     });
   };
 
+  const completeTodoItem = async (id) => {
+    Swal.fire({
+      title: "Mark as complete",
+      text: "Are you sure you have completed this item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, mark it as complete!",
+    }).then(async (result) => {
+      if (result.value) {
+        try {
+          const result = await editATodoEndPoint({ status: true }, id);
+          if (result.status === 200) {
+            setRefreshTodos(Date.now());
+          }
+        } catch (error) {
+          Swal.fire("Error", errorHandler(error), "danger");
+        }
+      }
+    });
+  };
+
   return (
     <Fragment>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4>List of Todos</h4>
+        <h4>{!viewCompleted ? "Pending" : "Completed"} Todos</h4>
         <Link to="/user/archives">
-          <button className="btn btn-secondary">View Archive</button>
+          <button className="btn btn-secondary btn-sm">View Archive</button>
         </Link>
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary btn-sm"
+          onClick={() => setViewCompleted(!viewCompleted)}
+        >
+          {viewCompleted ? "View pending" : "View completed"}
+        </button>
+        <button
+          className="btn btn-secondary btn-sm"
           data-toggle="modal"
           data-target="#addTodoModal"
         >
@@ -164,6 +200,14 @@ const Dashboard = () => {
                           src={TrashIcon}
                           alt="Trash"
                         />
+                        {!status && (
+                          <img
+                            onClick={() => completeTodoItem(todo.id)}
+                            title="Completed"
+                            src={CompleteIcon}
+                            alt="Complete"
+                          />
+                        )}
                       </div>
                     </h6>
                     <div className="card-body">

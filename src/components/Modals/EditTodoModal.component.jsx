@@ -24,6 +24,7 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
       Swal.fire("Error", errorHandler(error), "danger");
     }
   };
+  const { todo_item, priority, description } = todoItem;
   return (
     <div
       className="modal fade"
@@ -55,7 +56,7 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
                 placeholder="Name of todo item"
                 type="text"
                 name="todo_item"
-                value={todoItem.todo_item}
+                value={todo_item}
                 reference={register({ required: true })}
                 errors={errors.todo_item}
                 autoFocus
@@ -63,7 +64,7 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
               <SelectDropdown
                 placeholder="Priority"
                 name="priority"
-                value={todoItem.priority}
+                value={priority}
                 reference={register({ required: true })}
                 errors={errors.priority}
               >
@@ -76,7 +77,7 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
                 rows="3"
                 name="description"
                 ref={register}
-                defaultValue={todoItem.description}
+                defaultValue={description}
                 errors={errors.description}
                 placeholder="Enter a brief description"
               ></textarea>

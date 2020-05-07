@@ -86,12 +86,12 @@ export const updateProfilePictureEndpoint = async (reqBody) => {
   return data;
 };
 
-export const getAllTodosEndPoint = async (size, page, search) => {
+export const getAllTodosEndPoint = async (size, page, search, completed) => {
   const data = await axios({
     method: "GET",
     url: `${allTodosUrl}?size=${size}&page=${search ? 1 : page}&search=${
       search || ""
-    }`,
+    }&completed=${completed}`,
     headers: {
       Authorization: `Bearer ${token()}`,
     },
