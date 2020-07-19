@@ -47,7 +47,7 @@ const Dashboard = () => {
       if (error.response.status === 401) {
         history.push("/");
       }
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
   };
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
             Swal.fire("Deleted!", "Your file has been deleted.", "success");
           }
         } catch (error) {
-          Swal.fire("Error", errorHandler(error), "danger");
+          Swal.fire("Error", errorHandler(error), "error");
         }
       }
     });
@@ -95,7 +95,7 @@ const Dashboard = () => {
             Swal.fire("Archived!", "Your file has been archived.", "success");
           }
         } catch (error) {
-          Swal.fire("Error", errorHandler(error), "danger");
+          Swal.fire("Error", errorHandler(error), "error");
         }
       }
     });
@@ -118,7 +118,7 @@ const Dashboard = () => {
             setRefreshTodos(Date.now());
           }
         } catch (error) {
-          Swal.fire("Error", errorHandler(error), "danger");
+          Swal.fire("Error", errorHandler(error), "error");
         }
       }
     });

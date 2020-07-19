@@ -7,10 +7,10 @@ import { errorHandler } from "../utils/errorHandler";
 import Swal from "sweetalert2";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const ForgotPassword = () => {
-  const { register, handleSubmit, errors } = useForm();
+const ForgotPassword: React.FC = () => {
+  const { register, handleSubmit, errors } = useForm<ForgotPasswordData>();
   const [loading, setLoading] = useState(false);
-  const onSubmit = async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
       const result = await forgotPasswordEndpoint(data);
@@ -24,11 +24,11 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
+  });
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <h1 className="h3 mb-4 mt-5 font-weight-bold text-center">
         Forgot Password
       </h1>

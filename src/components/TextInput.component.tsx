@@ -1,7 +1,20 @@
 import React, { Fragment } from "react";
 import ErrorHandler from "./ErrorHandler.component";
 
-const TextInput = ({
+interface Props {
+  placeholder: string;
+  type: string;
+  name?: string;
+  margin?: string;
+  reference?: any;
+  errors?: any;
+  autoFocus?: boolean;
+  value?: any;
+  onChange?: any;
+  required?: boolean | undefined;
+}
+
+const TextInput: React.FC<Props> = ({
   placeholder,
   type,
   autoFocus,
@@ -11,6 +24,7 @@ const TextInput = ({
   reference,
   errors,
   onChange,
+  required,
 }) => {
   return (
     <Fragment>
@@ -25,6 +39,7 @@ const TextInput = ({
           name={name}
           defaultValue={value}
           onChange={onChange}
+          required={required}
         />
         <ErrorHandler errors={errors} />
       </div>

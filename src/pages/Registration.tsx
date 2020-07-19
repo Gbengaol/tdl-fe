@@ -8,11 +8,11 @@ import { errorHandler } from "../utils/errorHandler";
 import { registrationEndpoint } from "../utils/apis";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const Registration = () => {
+const Registration: React.FC = () => {
   const history = useHistory();
-  const { register, handleSubmit, errors } = useForm();
-  const [loading, setLoading] = useState(false);
-  const onSubmit = async (data) => {
+  const { register, handleSubmit, errors } = useForm<RegistrationFormData>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
       const result = await registrationEndpoint(data);
@@ -29,11 +29,11 @@ const Registration = () => {
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
+  });
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <h1 className="h3 mb-3 font-weight-bold text-center">
         Please fill in your details
       </h1>

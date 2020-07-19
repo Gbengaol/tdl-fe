@@ -2,23 +2,23 @@ import React, { useState, Fragment, useEffect } from "react";
 import Registration from "./Registration";
 import Login from "./Login";
 
-const Homepage = () => {
-  const [toShow, setToShow] = useState("login");
+const Homepage: React.FC = () => {
+  const [toShow, setToShow] = useState<string>("login");
   useEffect(() => {
-    localStorage.clear("todoListStorage");
+    localStorage.clear();
   }, []);
   return (
     <Fragment>
       <ul className="auth-toggle my-5">
         <li
           onClick={() => setToShow("login")}
-          className={toShow === "login" ? "active" : null}
+          className={toShow === "login" ? "active" : ""}
         >
           Login
         </li>
         <li
           onClick={() => setToShow("register")}
-          className={toShow === "register" ? "active" : null}
+          className={toShow === "register" ? "active" : ""}
         >
           Register
         </li>

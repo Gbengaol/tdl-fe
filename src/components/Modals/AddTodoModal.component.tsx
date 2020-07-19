@@ -5,26 +5,33 @@ import { useForm } from "react-hook-form";
 import { addATodoEndPoint } from "../../utils/apis";
 import { errorHandler } from "../../utils/errorHandler";
 import Swal from "sweetalert2";
+import ErrorHandler from "../ErrorHandler.component";
 
-const AddTodoModal = ({ setRefreshTodos }) => {
+interface Props {
+  setRefreshTodos: any;
+}
+
+const AddTodoModal: React.FC<Props> = ({ setRefreshTodos }) => {
   const { register, handleSubmit, errors } = useForm();
-  const dismissButton = useRef();
-  const onSubmit = async (data) => {
+  const dismissButton = useRef<HTMLButtonElement>(null);
+  const onSubmit = handleSubmit(async (data) => {
     try {
       const result = await addATodoEndPoint(data);
       if (result.status === 201) {
         setRefreshTodos(Date.now());
-        dismissButton.current.click();
+        if (dismissButton && dismissButton.current) {
+          dismissButton.current.click();
+        }
       }
     } catch (error) {
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
+  });
   return (
     <div
       className="modal fade"
       id="addTodoModal"
-      tabIndex="-1"
+      tabIndex={-1}
       role="dialog"
       aria-labelledby="addTodoModalLabel"
       aria-hidden="true"
@@ -46,7 +53,7 @@ const AddTodoModal = ({ setRefreshTodos }) => {
             </button>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={onSubmit}>
               <TextInput
                 placeholder="Name of todo item"
                 type="text"
@@ -67,12 +74,12 @@ const AddTodoModal = ({ setRefreshTodos }) => {
               </SelectDropdown>
               <textarea
                 className="form-control mb-3"
-                rows="3"
+                rows={3}
                 name="description"
                 ref={register}
-                errors={errors.description}
                 placeholder="Enter a brief description"
               ></textarea>
+              <ErrorHandler errors={errors.description} />
               <div className="d-flex justify-content-end">
                 <button className="btn btn-secondary">Submit</button>
               </div>

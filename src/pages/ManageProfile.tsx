@@ -7,12 +7,12 @@ import { changePasswordEndPoint } from "../utils/apis";
 import { useHistory } from "react-router-dom";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const ManageProfile = () => {
-  const { register, handleSubmit, errors } = useForm();
-  const [loading, setLoading] = useState(false);
+const ManageProfile: React.FC = () => {
+  const { register, handleSubmit, errors } = useForm<ManagePasswordData>();
+  const [loading, setLoading] = useState<boolean>(false);
   const history = useHistory();
 
-  const onSubmit = async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     try {
       const result = await changePasswordEndPoint(data);
@@ -26,19 +26,19 @@ const ManageProfile = () => {
         history.push("/");
       }
     } catch (error) {
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
       setLoading(false);
     }
-  };
+  });
   return (
     <Fragment>
       <h4>Change your password</h4>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <TextInput
           placeholder="Enter current password"
           type="password"
           name="oldPassword"
-          required="required"
+          required
           reference={register({ required: true })}
           errors={errors.oldPassword}
         />
@@ -46,7 +46,7 @@ const ManageProfile = () => {
           placeholder="Enter new password"
           type="password"
           name="newPassword"
-          required="required"
+          required
           reference={register({ required: true })}
           errors={errors.newPassword}
         />
@@ -54,7 +54,7 @@ const ManageProfile = () => {
           placeholder="Enter new password again"
           type="password"
           name="newPasswordAgain"
-          required="required"
+          required
           reference={register({ required: true })}
           errors={errors.newPasswordAgain}
         />

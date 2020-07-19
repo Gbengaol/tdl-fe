@@ -36,7 +36,7 @@ const Profile = () => {
         history.push("/user");
       }
     } catch (error) {
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
       setLoading(false);
     }
   };

@@ -9,9 +9,9 @@ import ButtonLoader from "../components/ButtonLoader.component";
 
 const Login = () => {
   const history = useHistory();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm<LoginFormData>();
   const [loading, setLoading] = useState(false);
-  const onSubmit = async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
       const result = await loginEndpoint(data);
@@ -28,11 +28,11 @@ const Login = () => {
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
+  });
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <h1 className="h3 mb-4 font-weight-bold text-center">Please sign in</h1>
       <TextInput
         placeholder="Email Address"

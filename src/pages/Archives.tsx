@@ -13,18 +13,18 @@ import TrashIcon from "../img/trash.svg";
 import RestoreIcon from "../img/restore.svg";
 import TextInput from "../components/TextInput.component";
 
-const Archives = () => {
-  const [todos, setTodos] = useState([]);
-  const [count, setCount] = useState();
+const Archives: React.FC = () => {
+  const [todos, setTodos] = useState<TodoProps[] | null>([]);
+  const [count, setCount] = useState<number | null>();
   const [size] = useState(10);
-  const [page, setPage] = useState(1);
-  const [refreshTodos, setRefreshTodos] = useState();
+  const [page, setPage] = useState<number>(1);
+  const [refreshTodos, setRefreshTodos] = useState<boolean | null | number>();
   const history = useHistory();
   useEffect(() => {
     getAllTodos();
     // eslint-disable-next-line
   }, [refreshTodos, page]);
-  const getAllTodos = async (search) => {
+  const getAllTodos = async (search?: string | null) => {
     try {
       const result = await getArchivedTodosEndPoint(size, page, search);
       if (result.status === 200) {
@@ -35,15 +35,15 @@ const Archives = () => {
       if (error.response.status === 401) {
         history.push("/");
       }
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
   };
 
-  const deleteTodoItem = (id) => {
+  const deleteTodoItem = (id: number) => {
     Swal.fire({
       title: "Delete Item",
       text: "Are you sure you want to delete this item?",
-      icon: "danger",
+      icon: "error",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -58,13 +58,13 @@ const Archives = () => {
             Swal.fire("Deleted!", "Your file has been deleted.", "success");
           }
         } catch (error) {
-          Swal.fire("Error", errorHandler(error), "danger");
+          Swal.fire("Error", errorHandler(error), "error");
         }
       }
     });
   };
 
-  const unarchiveTodoItem = (id) => {
+  const unarchiveTodoItem = (id: number) => {
     Swal.fire({
       title: "Restore Item",
       text: "Are you sure you want to restore this item?",
@@ -83,7 +83,7 @@ const Archives = () => {
             Swal.fire("Restored!", "Your file has been restored.", "success");
           }
         } catch (error) {
-          Swal.fire("Error", errorHandler(error), "danger");
+          Swal.fire("Error", errorHandler(error), "error");
         }
       }
     });
@@ -98,13 +98,13 @@ const Archives = () => {
         <TextInput
           type="search"
           placeholder="Search for an item"
-          onChange={(e) => {
+          onChange={(e: any) => {
             getAllTodos(e.target.value);
           }}
         />
       </div>
       <ul className="list-group">
-        {todos.length
+        {todos && todos.length
           ? todos.map((todo, id) => {
               const {
                 todo_item,
@@ -112,6 +112,7 @@ const Archives = () => {
                 priority,
                 status,
                 created_at,
+                id: todoId,
               } = todo;
               return (
                 <li key={id} className="list-group-item">
@@ -121,20 +122,23 @@ const Archives = () => {
                         {todo_item}
                         <br />
                         <small>
-                          Created on{" "}
-                          {created_at ? created_at.substring(0, 10) : null} at{" "}
-                          {created_at ? created_at.substring(11, 16) : null}
+                          {created_at && (
+                            <>
+                              Created on {created_at.substring(0, 10)} at{" "}
+                              {created_at.substring(11, 16)}
+                            </>
+                          )}
                         </small>
                       </div>
                       <div className="d-flex justify-content-end align-items-center todo-actions">
                         <img
-                          onClick={() => unarchiveTodoItem(todo.id)}
+                          onClick={() => unarchiveTodoItem(+todoId)}
                           title="Restore"
                           src={RestoreIcon}
                           alt="restore"
                         />
                         <img
-                          onClick={() => deleteTodoItem(todo.id)}
+                          onClick={() => deleteTodoItem(+todoId)}
                           title="Delete"
                           src={TrashIcon}
                           alt="Trash"
@@ -160,7 +164,7 @@ const Archives = () => {
           <Pagination
             totalSize={count}
             sizePerPage={size}
-            changeCurrentPage={(page) => setPage(page)}
+            changeCurrentPage={(page: number) => setPage(page)}
             numberOfPagesNextToActivePage={1}
             theme="bootstrap"
             currentPage={page}

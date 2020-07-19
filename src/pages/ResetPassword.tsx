@@ -8,11 +8,13 @@ import Swal from "sweetalert2";
 import ButtonLoader from "../components/ButtonLoader.component";
 
 const ResetPassword = () => {
-  const { register, handleSubmit, errors } = useForm();
-  const [loading, setLoading] = useState(false);
-  const token = useRouteMatch().params.token;
+  const { register, handleSubmit, errors } = useForm<ManagePasswordData>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    params: { token },
+  } = useRouteMatch();
   const history = useHistory();
-  const onSubmit = async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
       const result = await resetPasswordEndpoint(data, token);
@@ -27,11 +29,11 @@ const ResetPassword = () => {
       }
     } catch (error) {
       setLoading(false);
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
+  });
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <h1 className="h3 mb-4 mt-5 font-weight-bold text-center">
         Set New Password
       </h1>

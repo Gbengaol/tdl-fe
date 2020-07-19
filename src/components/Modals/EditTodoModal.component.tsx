@@ -6,30 +6,36 @@ import { editATodoEndPoint } from "../../utils/apis";
 import { errorHandler } from "../../utils/errorHandler";
 import Swal from "sweetalert2";
 
-const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
-  const { register, handleSubmit, errors } = useForm();
-  const dismissButton = useRef();
-  const [todoItem, setTodoItem] = useState({});
+interface Props {
+  todoToEdit: TodoProps;
+  setRefreshTodos: any;
+}
+
+const EditTodoModal: React.FC<Props> = ({ todoToEdit, setRefreshTodos }) => {
+  const { register, handleSubmit, errors } = useForm<TodoProps>();
+  const dismissButton = useRef<HTMLButtonElement>(null);
+  const [todoItem, setTodoItem] = useState<TodoProps>();
   useEffect(() => {
     setTodoItem(todoToEdit);
   }, [todoToEdit]);
-  const onSubmit = async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
-      const result = await editATodoEndPoint(data, todoItem.id);
+      const result = await editATodoEndPoint(data, todoItem && todoItem.id);
       if (result.status === 200) {
         setRefreshTodos(Date.now());
-        dismissButton.current.click();
+        if (dismissButton.current) {
+          dismissButton.current.click();
+        }
       }
     } catch (error) {
-      Swal.fire("Error", errorHandler(error), "danger");
+      Swal.fire("Error", errorHandler(error), "error");
     }
-  };
-  const { todo_item, priority, description } = todoItem;
+  });
   return (
     <div
       className="modal fade"
       id="editTodoModal"
-      tabIndex="-1"
+      tabIndex={-1}
       role="dialog"
       aria-labelledby="editTodoModalLabel"
       aria-hidden="true"
@@ -51,12 +57,12 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
             </button>
           </div>
           <div className="modal-body">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={onSubmit}>
               <TextInput
                 placeholder="Name of todo item"
                 type="text"
                 name="todo_item"
-                value={todo_item}
+                value={todoItem && todoItem.todo_item}
                 reference={register({ required: true })}
                 errors={errors.todo_item}
                 autoFocus
@@ -64,7 +70,7 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
               <SelectDropdown
                 placeholder="Priority"
                 name="priority"
-                value={priority}
+                value={todoItem && todoItem.priority}
                 reference={register({ required: true })}
                 errors={errors.priority}
               >
@@ -74,13 +80,13 @@ const EditTodoModal = ({ todoToEdit, setRefreshTodos }) => {
               </SelectDropdown>
               <textarea
                 className="form-control mb-3"
-                rows="3"
+                rows={3}
                 name="description"
                 ref={register}
-                defaultValue={description}
-                errors={errors.description}
+                defaultValue={todoItem && todoItem.description}
                 placeholder="Enter a brief description"
               ></textarea>
+
               <div className="d-flex justify-content-end">
                 <button className="btn btn-secondary">Submit</button>
               </div>
