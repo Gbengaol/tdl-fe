@@ -3,20 +3,18 @@ import { useForm } from "react-hook-form";
 import TextInput from "../components/TextInput.component";
 import Swal from "sweetalert2";
 import { errorHandler } from "../utils/errorHandler";
-import { changePasswordEndPoint } from "../utils/apis";
 import { useHistory } from "react-router-dom";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const ManageProfile: React.FC = () => {
-  const { register, handleSubmit, errors } = useForm<ManagePasswordData>();
-  const [loading, setLoading] = useState<boolean>(false);
+const ManageProfile = () => {
+  const { register, handleSubmit, errors } = useForm();
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     setLoading(true);
     try {
-      const result = await changePasswordEndPoint(data);
-      if (result.status === 200) {
+      setTimeout(() => {
         Swal.fire(
           "Success",
           "Password changed successfully! Please log in again with your new password.",
@@ -24,7 +22,7 @@ const ManageProfile: React.FC = () => {
         );
         setLoading(false);
         history.push("/");
-      }
+      }, 2000);
     } catch (error) {
       Swal.fire("Error", errorHandler(error), "error");
       setLoading(false);

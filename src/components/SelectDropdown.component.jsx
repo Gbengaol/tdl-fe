@@ -1,17 +1,7 @@
 import React from "react";
 import ErrorHandler from "./ErrorHandler.component";
 
-interface Props {
-  children: any;
-  placeholder: string;
-  required?: boolean;
-  name: string;
-  errors?: any;
-  value?: any;
-  reference?: any;
-}
-
-const SelectDropdown: React.FC<Props> = ({
+const SelectDropdown = ({
   children,
   placeholder,
   required,

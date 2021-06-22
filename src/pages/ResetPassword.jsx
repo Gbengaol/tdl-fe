@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import { Link, useRouteMatch, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import TextInput from "../components/TextInput.component";
 import { useForm } from "react-hook-form";
-import { resetPasswordEndpoint } from "../utils/apis";
 import { errorHandler } from "../utils/errorHandler";
 import Swal from "sweetalert2";
 import ButtonLoader from "../components/ButtonLoader.component";
 
 const ResetPassword = () => {
-  const { register, handleSubmit, errors } = useForm<ManagePasswordData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const {
-    params: { token },
-  } = useRouteMatch();
+  const { register, handleSubmit, errors } = useForm();
+  const [loading, setLoading] = useState(false);
+
   const history = useHistory();
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
       setLoading(true);
-      const result = await resetPasswordEndpoint(data, token);
-      if (result.status === 200) {
+      setTimeout(() => {
         setLoading(false);
         Swal.fire(
           "Password changed",
@@ -26,7 +22,7 @@ const ResetPassword = () => {
           "success"
         );
         history.push("/");
-      }
+      }, 2000);
     } catch (error) {
       setLoading(false);
       Swal.fire("Error", errorHandler(error), "error");

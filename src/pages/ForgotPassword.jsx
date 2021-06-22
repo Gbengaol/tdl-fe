@@ -2,26 +2,24 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import TextInput from "../components/TextInput.component";
 import { useForm } from "react-hook-form";
-import { forgotPasswordEndpoint } from "../utils/apis";
 import { errorHandler } from "../utils/errorHandler";
 import Swal from "sweetalert2";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const ForgotPassword: React.FC = () => {
-  const { register, handleSubmit, errors } = useForm<ForgotPasswordData>();
+const ForgotPassword = () => {
+  const { register, handleSubmit, errors } = useForm();
   const [loading, setLoading] = useState(false);
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
       setLoading(true);
-      const result = await forgotPasswordEndpoint(data);
-      if (result.status === 200) {
+      setTimeout(() => {
         setLoading(false);
         Swal.fire(
           "Password reset",
           "Your password has been reset. Please check your email to change to a new password.",
           "success"
         );
-      }
+      }, 2000);
     } catch (error) {
       setLoading(false);
       Swal.fire("Error", errorHandler(error), "error");

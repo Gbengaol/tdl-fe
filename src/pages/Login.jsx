@@ -2,30 +2,21 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import TextInput from "../components/TextInput.component";
 import { useForm } from "react-hook-form";
-import { loginEndpoint } from "../utils/apis";
 import { errorHandler } from "../utils/errorHandler";
 import Swal from "sweetalert2";
 import ButtonLoader from "../components/ButtonLoader.component";
 
 const Login = () => {
   const history = useHistory();
-  const { register, handleSubmit, errors } = useForm<LoginFormData>();
+  const { register, handleSubmit, errors } = useForm();
   const [loading, setLoading] = useState(false);
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
       setLoading(true);
-      const result = await loginEndpoint(data);
-      if (result.status === 200) {
-        localStorage.setItem(
-          "todoListStorage",
-          JSON.stringify({
-            token: result.data.token,
-            first_name: result.data.user.first_name,
-          })
-        );
+      setTimeout(() => {
         setLoading(false);
         history.push("/user");
-      }
+      }, 2000);
     } catch (error) {
       setLoading(false);
       Swal.fire("Error", errorHandler(error), "error");

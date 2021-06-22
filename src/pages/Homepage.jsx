@@ -2,8 +2,8 @@ import React, { useState, Fragment, useEffect } from "react";
 import Registration from "./Registration";
 import Login from "./Login";
 
-const Homepage: React.FC = () => {
-  const [toShow, setToShow] = useState<string>("login");
+const Homepage = () => {
+  const [toShow, setToShow] = useState("login");
   useEffect(() => {
     localStorage.clear();
   }, []);

@@ -1,20 +1,7 @@
 import React, { Fragment } from "react";
 import ErrorHandler from "./ErrorHandler.component";
 
-interface Props {
-  placeholder: string;
-  type: string;
-  name?: string;
-  margin?: string;
-  reference?: any;
-  errors?: any;
-  autoFocus?: boolean;
-  value?: any;
-  onChange?: any;
-  required?: boolean | undefined;
-}
-
-const TextInput: React.FC<Props> = ({
+const TextInput = ({
   placeholder,
   type,
   autoFocus,

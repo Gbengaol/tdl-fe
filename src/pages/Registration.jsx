@@ -5,28 +5,19 @@ import SelectDropdown from "../components/SelectDropdown.component";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { errorHandler } from "../utils/errorHandler";
-import { registrationEndpoint } from "../utils/apis";
 import ButtonLoader from "../components/ButtonLoader.component";
 
-const Registration: React.FC = () => {
+const Registration = () => {
   const history = useHistory();
-  const { register, handleSubmit, errors } = useForm<RegistrationFormData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const onSubmit = handleSubmit(async (data) => {
+  const { register, handleSubmit, errors } = useForm();
+  const [loading, setLoading] = useState(false);
+  const onSubmit = handleSubmit(async () => {
     try {
       setLoading(true);
-      const result = await registrationEndpoint(data);
-      if (result.status === 201) {
-        localStorage.setItem(
-          "todoListStorage",
-          JSON.stringify({
-            token: result.data.token,
-            first_name: result.data.user.first_name,
-          })
-        );
+      setTimeout(() => {
         setLoading(false);
         history.push("/user");
-      }
+      }, 2000);
     } catch (error) {
       setLoading(false);
       Swal.fire("Error", errorHandler(error), "error");

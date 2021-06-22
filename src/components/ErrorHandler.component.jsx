@@ -1,6 +1,6 @@
 import React from "react";
 
-const ErrorHandler: React.FC<ErrorProps> = ({ errors }) => {
+const ErrorHandler = ({ errors }) => {
   return (
     <>
       {errors && (
